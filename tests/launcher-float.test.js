@@ -48,24 +48,32 @@ describe('launcher-float 官方插件', () => {
     assert.equal(m.entry, 'index.js')
     assert.ok(m.inject.includes('window-manager'))
     assert.equal(m.system, false)
+    assert.equal(m.name, '启动悬浮球')
+    assert.equal(m.version, '1.1.0')
   })
 
   it('配置表单覆盖全部行为开关', () => {
-    for (const key of ['autoFloatOnSai2', 'minimizeToTray', 'closeToTray', 'alwaysOnTop', 'floatWidth', 'floatHeight']) {
+    for (const key of ['autoFloatOnSai2', 'minimizeToTray', 'closeToTray', 'alwaysOnTop', 'ballSize', 'floatWidth', 'floatHeight']) {
       assert.ok(plugin.configSchema[key], key)
     }
     assert.equal(plugin.configSchema.autoFloatOnSai2.default, true)
     assert.equal(plugin.configSchema.closeToTray.default, false)
+    // 悬浮球直径有界，废弃的宽高仍在（老配置不丢）
+    assert.equal(plugin.configSchema.ballSize.default, 88)
+    assert.equal(plugin.configSchema.ballSize.min, 48)
+    assert.equal(plugin.configSchema.ballSize.max, 160)
+    assert.match(plugin.configSchema.floatWidth.label, /已废弃/)
+    assert.match(plugin.configSchema.floatHeight.hint, /废弃/)
   })
 
   it('apply 注入配置 getter、订阅启动事件与手动动作', () => {
     const { ctx, out } = fakeCtx()
-    const config = { autoFloatOnSai2: true, minimizeToTray: true, closeToTray: false, alwaysOnTop: true, floatWidth: 320, floatHeight: 120 }
+    const config = { autoFloatOnSai2: true, minimizeToTray: true, closeToTray: false, alwaysOnTop: true, ballSize: 96, floatWidth: 320, floatHeight: 120 }
     plugin.apply(ctx, config)
     assert.equal(typeof out.configured, 'function')
     assert.deepEqual(
-      { floatWidth: out.configured().floatWidth, autoFloatOnSai2: out.configured().autoFloatOnSai2 },
-      { floatWidth: 320, autoFloatOnSai2: true }
+      { floatWidth: out.configured().floatWidth, autoFloatOnSai2: out.configured().autoFloatOnSai2, ballSize: out.configured().ballSize },
+      { floatWidth: 320, autoFloatOnSai2: true, ballSize: 96 }
     )
     assert.equal(out.events.has('opener_after_launch'), true)
     assert.equal(out.actions[0]?.id, 'launcher-float.toggle')

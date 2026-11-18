@@ -1,9 +1,9 @@
 /**
- * 启动悬浮窗（官方独立插件，原工作台内置插件）。
+ * 启动悬浮球（官方独立插件，原工作台内置插件）。
  *
  * 只负责「什么时候触发」和「用户想要什么行为」：
- * - 订阅 opener_after_launch，SAI2 启动后自动收成悬浮小窗；
- * - 把配置以 getter 交给内核 WindowManager，悬浮/托盘/最小化行为由内核执行；
+ * - 订阅 opener_after_launch，SAI2 启动后自动收成桌面悬浮球；
+ * - 把配置以 getter 交给内核 WindowManager，球模式 / 托盘 / 最小化行为由内核执行；
  * - 提供一个手动切换的动作，没启动 SAI2 也能用。
  *
  * 配置保存会自动触发插件 reload（plugins.ipc），所以新值立即生效。
@@ -12,7 +12,7 @@ module.exports = {
   configSchema: {
     autoFloatOnSai2: {
       type: 'bool',
-      label: '启动 SAI2 后自动变悬浮窗',
+      label: '启动 SAI2 后自动变悬浮球',
       default: true,
       hint: '只在通过工作台启动 SAI2 时触发；自己从别处打开 SAI2 不会误触。'
     },
@@ -30,24 +30,33 @@ module.exports = {
     },
     alwaysOnTop: {
       type: 'bool',
-      label: '悬浮窗始终置顶',
+      label: '悬浮球始终置顶',
       default: true,
-      hint: '盖在 SAI2 上方方便随时点开；如果挡到画布可以关掉。'
+      hint: '盖在 SAI2 上方方便随时点开；如果挡到画布可以在球右键菜单里展开主界面。'
+    },
+    ballSize: {
+      type: 'int',
+      label: '悬浮球直径',
+      default: 88,
+      min: 48,
+      max: 160,
+      hint: '桌面小圆球的直径，48~160px；皮肤在球右键菜单「更换皮肤…」里换，自定义图放 data\\ball-skins\\。'
     },
     floatWidth: {
       type: 'int',
-      label: '悬浮窗宽度',
+      label: '（已废弃）悬浮窗宽度',
       default: 336,
       min: 240,
       max: 560,
-      hint: '240~560px，保存后立即按新尺寸重排。'
+      hint: '已废弃：现在收成悬浮球，宽高不再生效，请改用「悬浮球直径」。保留仅为兼容老配置。'
     },
     floatHeight: {
       type: 'int',
-      label: '悬浮窗高度',
+      label: '（已废弃）悬浮窗高度',
       default: 132,
       min: 100,
-      max: 260
+      max: 260,
+      hint: '已废弃：改用「悬浮球直径」。'
     }
   },
 
@@ -60,6 +69,7 @@ module.exports = {
       minimizeToTray: config.minimizeToTray,
       closeToTray: config.closeToTray,
       alwaysOnTop: config.alwaysOnTop,
+      ballSize: config.ballSize,
       floatWidth: config.floatWidth,
       floatHeight: config.floatHeight
     }))
@@ -78,19 +88,19 @@ module.exports = {
       // 只对 SAI2 生效：PS / CSP 启动时不打扰
       if (config.autoFloatOnSai2 && payload && payload.openerId === 'opener-sai2') {
         wm.enterFloat()
-        refreshStatus('SAI2 已启动 · 悬浮窗模式')
+        refreshStatus('SAI2 已启动 · 悬浮球模式')
       }
     })
 
     ctx.addToolbarAction({
       id: 'launcher-float.toggle',
-      label: wm.isFloat() ? '展开主界面' : '切换悬浮窗',
+      label: wm.isFloat() ? '展开主界面' : '收成悬浮球',
       run: () => {
         wm.toggleFloat()
-        refreshStatus(wm.isFloat() ? '悬浮窗模式' : '主界面模式')
+        refreshStatus(wm.isFloat() ? '悬浮球模式' : '主界面模式')
       }
     })
 
-    ctx.log.info('启动悬浮窗已就绪')
+    ctx.log.info('启动悬浮球已就绪')
   }
 }
