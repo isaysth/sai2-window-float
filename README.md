@@ -51,8 +51,11 @@
 ## 开发
 
 ```bash
+npm test         # 5 项契约断言（node 内置 test runner，无依赖）
 npm run build    # 生成 dist/sai2-window-float-<version>.zip 并打印 sha256
 ```
+
+单元测试从工作台框架的 `tests/unit/launcher-float.test.ts` 移植而来，插件的验证现在随本仓库走。
 
 版本号以 `plugin.json` 的 `version` 为准；出包内容仅 `plugin.json`、`index.js`、`README.md`，
 staging 目录为 `dist/stage/sai2-window-float/`。依赖：Node.js + Python 3（仅用于打zip）。

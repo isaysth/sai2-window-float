@@ -4,6 +4,7 @@
   "private": true,
   "description": "启动悬浮窗 - sai2工作台官方插件（独立项目）",
   "scripts": {
+    "test": "node --test tests/launcher-float.test.js",
     "build": "node scripts/build.js"
   }
 }
