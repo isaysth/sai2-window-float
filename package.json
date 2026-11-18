@@ -1,0 +1,9 @@
+{
+  "name": "sai2-window-float",
+  "version": "1.0.0",
+  "private": true,
+  "description": "启动悬浮窗 - sai2工作台官方插件（独立项目）",
+  "scripts": {
+    "build": "node scripts/build.js"
+  }
+}
