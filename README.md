@@ -7,6 +7,12 @@
 插件只决定「什么时候触发」和「用户想要什么行为」，**悬浮窗 UI 与托盘行为由工作台内核提供**，
 不随插件搬走，也不需要修改内核。
 
+## 下载
+
+- **版本**：v1.0.0（tag `v1.0.0`）
+- **下载**：https://github.com/isaysth/sai2-window-float/releases/tag/v1.0.0
+- **网盘镜像**：https://pan.baidu.com/s/1y2_qD1zGCAg1qLJfIs-BwA?pwd=hos7 （提取码 `hos7`）
+
 ## 兼容契约
 
 本插件只依赖 sai2工作台的公开插件契约：
